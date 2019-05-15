@@ -1,0 +1,122 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+<script>
+//document.write("1")
+var label1 = {{label1|tojson}}
+var label2 = {{label2|tojson}}
+var value1 = {{value1|tojson}}
+var value2 = {{value2|tojson}}
+var labels = []
+
+var temp1 = []
+for (var i=0;i<label1.length;i++){
+    temp1.push({y:value1[i], label: label1[i]})
+}
+
+var temp2 = []
+for (var i=0;i<label2.length;i++){
+    temp2.push({y:value2[i], label: label2[i]})
+}
+
+window.onload = function () {
+var chart1 = new CanvasJS.Chart("chartContainer1", {
+    animationEnabled: true,
+    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    title:{
+        text: "Top 5 customers based on num of tickets (last 6 months)"
+    },
+    axisY: {
+        title: "number of tickets"
+    },
+    data: [{        
+        type: "column",  
+        showInLegend: false, 
+        legendMarkerColor: "grey",
+        legendText: "dollars",
+        dataPoints: temp1
+    }]
+});
+
+var chart2 = new CanvasJS.Chart("chartContainer2", {
+    animationEnabled: true,
+    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    title:{
+        text: "Top 5 customers based on commissions (last 6 months)"
+    },
+    axisY: {
+        title: "commissions (dollars)"
+    },
+    data: [{        
+        type: "column",  
+        showInLegend: false, 
+        legendMarkerColor: "grey",
+        legendText: "dollars",
+        dataPoints: temp2
+    }]
+});
+chart1.render();
+chart2.render();
+
+}
+</script>
+
+</head>
+<body>
+
+<a href="/booking_agent_home">Go Back</a><br>
+<p></p><br>
+<div style="float: left; height: 900px; width: 50%;">
+	{% if data1 %}
+        <h5>Top 5 customers based on number of tickets (past 6 months): </h5>
+        <table border="1" width="300px" height="100px" align="left">
+            <thread>
+				<th>customer email</th>
+				<th>number of tickets sold</th>
+            </thread>
+            {%for line in data1%}
+                <tr>
+					<td>{{line['customer_email']}}</td>
+					<td>{{line['tickets_sold']}}</td>
+                </tr>
+            {%endfor%}
+    </table>
+        {% else %}
+        <p>No customer found.</p>
+    {% endif %}
+    <p></p><br>
+
+    <div id="chartContainer1" style="float: left;height: 300px; width: 80%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+</div>
+
+<div style="float: right; height: 900px; width: 50%;">
+    {% if data2 %}
+        <h5 align='right'>Top 5 customers based on amount of commissions received (past year): </h5>
+        <table border="1" width="300px" height="100px" align="right">
+            <thread>
+				<th>customer email</th>
+				<th>total commissions</th>
+            </thread>
+            {%for line in data2%}
+                <tr>
+					<td>{{line['customer_email']}}</td>
+					<td>{{line['total_commission']}}</td>
+                </tr>
+            {%endfor%}
+    </table>
+        {% else %}
+        <p>No customer found.</p>
+    {% endif %}
+    <p></p><br>
+    <div id="chartContainer2" style="float: right;height: 300px; width: 80%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</div>
+
+
+
+</body>
+
+
+</html>
